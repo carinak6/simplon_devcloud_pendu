@@ -17,12 +17,13 @@ if urllib.request.urlopen("http://www.mit.edu/~ecprice/wordlist.10000").getcode(
 else:      
       resp = req.get("http://www.mit.edu/~ecprice/wordlist.10000")
       logging.info("Verification overture de fichier mots. FIN")
-      #print(resp.text)
-      mots = resp.content #type bytes avec "\n"
+      #print(resp.text) il retourne un string avec des retourn à la ligne
+      mots = resp.content #il retourne une chaine de type bytes avec "\n"
+
       #transformer le type byte de content en string
       reponse = mots.decode('utf-8')
+      #on cree un liste des mots
       reponse2 = reponse.split("\n")
-
 
 #print(reponse2)
 
@@ -79,9 +80,6 @@ HANGMANPICS = ['''
       |
 =========''']
 
-#print(HANGMANPICS[6])
-
-
 
 chosen_word = random.choice(reponse2) 
 print(chosen_word)
@@ -94,12 +92,16 @@ print(chaineDecouvrir)
 
 nroPendu=0
 drapeu = True
+listeLettresChoisi=set()
 
 while drapeu:
+      if len(listeLettresChoisi) != 0:
+            print("Lettres deja choisi : ", ' '.join(listeLettresChoisi))
       guest = input("\nChoisir une lettre : ")
       print(guest)
+      listeLettresChoisi.add(guest)
       if guest in chosen_word:
-            print('trouvé')
+            #lprint('trouvé')
             for ki,x in enumerate(chosen_word):            
                   if guest == x :
                         chaineDecouvrir[ki]=guest                  
@@ -111,20 +113,25 @@ while drapeu:
             nroPendu+=1
             
       print(chaineDecouvrir)
-
-      if life == 0:
+      motsDecouvrir = ''.join(chaineDecouvrir)
+     #print('mot en decouverte :', motsDecouvrir )
+      if motsDecouvrir == chosen_word :
+            print('Vous avez Gangné!!!')
+            drapeu=False #pour sortir du boucle
+      elif life == 0:
             print('pendu')
             drapeu=False #pour sortir du boucle
+      else:
+            print("Vous voulez essaie le mot à diviner [Oui] / [Non]?")
+            res = input()
+            if res == 'o':
+                  print("Tapez le mot : ")
+                  respuesta = input()
+                  if respuesta == chosen_word:
+                        print('Vous avez Gangné!!!')
+                        drapeu=False #pour sortir du boucle
+                        
 
 
-print('il est sortie')
-
-#def reemplacer(mots, lettre):
-#      print('entra a reemplacer')
-#      position=0
-#      for x in mots:            
-#            if lettre == x :
-#                  chaineDecouvrir[position]=lettre
-#            position +=1
-
- #     print(chaineDecouvrir)           
+print("c est fini")
+          

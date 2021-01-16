@@ -1,0 +1,4 @@
+2021-01-17 00:06:09,334 -- root -- INFO -- Verification overture de fichier mots. START
+2021-01-17 00:06:12,458 -- urllib3.connectionpool -- DEBUG -- Starting new HTTP connection (1): www.mit.edu:80
+2021-01-17 00:06:12,483 -- urllib3.connectionpool -- DEBUG -- http://www.mit.edu:80 "GET /~ecprice/wordlist.10000 HTTP/1.1" 200 75880
+2021-01-17 00:06:12,509 -- root -- INFO -- Verification overture de fichier mots. FIN

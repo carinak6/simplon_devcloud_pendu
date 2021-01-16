@@ -81,8 +81,10 @@ HANGMANPICS = ['''
 
 #print(HANGMANPICS[6])
 
-chosen_word = random.choice(reponse2) 
 
+
+chosen_word = random.choice(reponse2) 
+print(chosen_word)
 chaineDecouvrir=[]
 for i in range(len(chosen_word)) :
       chaineDecouvrir.append('-')
@@ -90,24 +92,39 @@ for i in range(len(chosen_word)) :
 
 print(chaineDecouvrir)
 
+nroPendu=0
 drapeu = True
+
 while drapeu:
       guest = input("\nChoisir une lettre : ")
       print(guest)
       if guest in chosen_word:
             print('trouvé')
-            #reemplacer(chosen_word, guest)
+            for ki,x in enumerate(chosen_word):            
+                  if guest == x :
+                        chaineDecouvrir[ki]=guest                  
+            
       else:
             life -=1
-            print(HANGMANPICS[1])
+            print('il vous reste :',life,' vies')
+            print(HANGMANPICS[nroPendu])
+            nroPendu+=1
+            
+      print(chaineDecouvrir)
+
       if life == 0:
             print('pendu')
             drapeu=False #pour sortir du boucle
-      
+
 
 print('il est sortie')
 
 #def reemplacer(mots, lettre):
-      
-  #    for x in mots:
-   #         if lettre == x :
+#      print('entra a reemplacer')
+#      position=0
+#      for x in mots:            
+#            if lettre == x :
+#                  chaineDecouvrir[position]=lettre
+#            position +=1
+
+ #     print(chaineDecouvrir)           

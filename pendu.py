@@ -11,7 +11,7 @@ logging.basicConfig(filename='logs.log',level=logging.DEBUG,\
       format='%(asctime)s -- %(name)s -- %(levelname)s -- %(message)s')
 
 logging.info("Verification overture de fichier mots. START")
-#on verifie si le site envoie bien les mots
+# On verifie si le site envoie bien les mots
 if urllib.request.urlopen("http://www.mit.edu/~ecprice/wordlist.10000").getcode() != 200:
       #s'il y a en erreur on affiche un fichier en local
       f= open("./assets/mots.txt","r")
@@ -85,6 +85,8 @@ HANGMANPICS = ['''
       |
 =========''']
 
+HANGMANPICS.reverse() # j ai enversé la liste de l'ascii pour utiliser la variable life comme index de l'affichage du pendu
+
 #on choisi un mot al hazar
 chosen_word = random.choice(reponse2) 
 
@@ -99,15 +101,15 @@ for i in range(len(chosen_word)) :
 
 print(chaineDecouvrir)
 
-nroPendu=0 #variable qui affichera la partie du pendu
 finJeux = False #variable pour sortir de la boucle
 listeLettresChoisi=set() #variable pour afficher les lettres dejà choisie
 
 while finJeux == False:
       if len(listeLettresChoisi) != 0:
+            print('vous avez ',life,' vies')
             print("Lettres deja choisi : ", ' '.join(listeLettresChoisi))
 
-      guest = input("\nChoisir une lettre : ")
+      guest = input("\nChoisir une lettre : ").lower()
       print(guest) #on affiche la letre
 
       listeLettresChoisi.add(guest) #ajoute la lettre dans le set
@@ -120,9 +122,9 @@ while finJeux == False:
             
       else: #le lettre n'est pas partie du mot à decouvrir
             life -=1
-            print('il vous reste :',life,' vies')
-            print(HANGMANPICS[nroPendu])
-            nroPendu+=1 #variable pour savoir quel parti de l'ascii on affiche la prochaine fois
+            print('il vous reste :',life,' vies')            
+            print(HANGMANPICS[life])
+           
             
       print(chaineDecouvrir) #liste de lettre de mots à decouvrir
       motsDecouvrir = ''.join(chaineDecouvrir) #transforme la liste en string, pour la comparer avec le mots choisie

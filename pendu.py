@@ -10,8 +10,9 @@ import urllib.request
 logging.basicConfig(filename='logs.log',level=logging.DEBUG,\
       format='%(asctime)s -- %(name)s -- %(levelname)s -- %(message)s')
 
+logging.info("Declaration des variables qu on utlisera pour charger les mots à utiliser")
 #declaration des variables 
-reponse2=''
+reponse2='' #
 
 logging.info("Verification overture de fichier mots. START")
 
@@ -20,7 +21,7 @@ try:
       resp = req.get("http://www.mit.edu/~ecprice/wordlist.10000")
       logging.info("Le Site functionne correcterment. Verification overture de fichier mots. FIN")
 
-      #print(resp.text) il retourne un string avec des retourn à la ligne
+      #print(resp.text) il retourne un string avec des retourn à la ligne, alors j'utilise content
       mots = resp.content #il retourne une chaine de type bytes avec "\n"      
       
       #transformer le type byte de content en string
@@ -32,8 +33,9 @@ try:
 except urllib.error.URLError as e:
       print('Erreur trouve  ==> ',e.reason)
       logging.error('Error %s: %s', '01234', 'Le site source est indisponible :  '+e.reason)
+      
 
-#on verifie si la variable que recupere les mots est vide, s'il l'est alors ça veut dire qu il y a eu un proble de ressource
+#on verifie si la variable que recupere les mots est vide, s'il l'est alors ça veut dire qu il y a eu un probleme de ressource
 #et on passe à la lecture du fichier des mots en local
 if len(reponse2) == 0 :
       logging.info("Error le site est indisponible. Overture du fichier mots en local. START")
@@ -44,7 +46,7 @@ if len(reponse2) == 0 :
 
 #print(reponse2)
 
-logging.info("Declaration des variables")
+logging.info("Declaration des variables à utiliser")
 life = 7
 
 #liste avec le code ascii du pendu
@@ -103,8 +105,11 @@ HANGMANPICS.reverse() # j ai enversé la liste de l'ascii pour utiliser la varia
 
 #on choisi un mot al hazar
 chosen_word = random.choice(reponse2) 
+logging.info("On chosie al hazar un mot : "+ chosen_word)
 
+logging.info("declaration des variables à utiliser dans la boucle. START")
 #declaration des variables à utiliser dans la boucle
+
 print(chosen_word) #pour verifier
 chaineDecouvrir=[] #variable de type liste avec les lettres que on aura decouverte
 finJeux = False #variable pour sortir de la boucle
@@ -112,19 +117,16 @@ listeLettresChoisi=set() #variable pour afficher les lettres dejà choisie, on u
 motsDecouvrir = ''
 guest='' # lettre tappée pour l utilisateur
 
-logging.info("Fin de declaration des variables")
+logging.info("Declaration des variables . FIN")
 
 logging.info("Generation d'une liste qui represente les mots choisi. START")
 #boucle pour asigner les tires qui correspondant au mots choisie
-
 for i in range(len(chosen_word)) :
       chaineDecouvrir.append('-')
       #print('-', end=' ')
 
 print(chaineDecouvrir)
 logging.info("Generation d'une liste qui represente les mots choisi. FIN ==> mot à diviner :"+chosen_word +" representation : "+str(chaineDecouvrir ))
-
-
 
 logging.info("Debut du boucle while pour diviner le mot caché. START ")
 while finJeux == False:
@@ -169,6 +171,7 @@ while finJeux == False:
       #Bloque du code pour verifier si on a decouvert le mot, utilisé toutes les vies et pour essayer de deviner le mot
       logging.info("Initiation de verifaction si on a decouvert le mot . START")
       if motsDecouvrir == chosen_word : #on verifie si le mots decouverte est egal à la mots choisie
+
             print(f'Vous avez Gangné!!! Vous avez trouvé : {chosen_word} ')
             finJeux=True #pour sortir du boucle
             logging.info(f"Mot deviné, L'utilisateur a tappée correctement le mot : {chosen_word}. FIN")
@@ -179,15 +182,16 @@ while finJeux == False:
             logging.info("Il n'y plus de vie, l'utilisateur a perdu. FIN")
 
       else: # demande si on veut essayer de diviner le mot
+
             logging.info("Demande à l'utilisateur s'il veut taper le mot à diviner : [Oui] o / [Non]?. START")
             print("Vous voulez essaie le mot à diviner [Oui] o / [Non] ?")
             res = input().lower() # l utilisateur doit repondre s'il veut essayer de diviner le mot [Oui] o / [Non], le oui = o, et non c est n'import quel lettre, pour pas devoir redemander au cas où 
             
             if res == 'o' or res =='oui': # l'utilisateur veut diviner le mots
                   print("Tapez le mot : ")
-                  respuesta = input().lower() # reponse de l'utilisateur
-                  
+                  respuesta = input().lower() # reponse de l'utilisateur                  
                   logging.info("L'utilisateur à tapé Oui, mot tapé : "+respuesta+" . START")
+
                   if respuesta == chosen_word: # verification si la reponse est egal au mot choisi
                         print('Vous avez Deviné Bravo Gangné!!!')
                         finJeux=True #pour sortir du boucle
@@ -202,4 +206,6 @@ while finJeux == False:
                   logging.info("L'utilisateur à tapé n'import quel lettre pour dire NON, on continue le boucle")
 
 print("c est fini !! :-)")
+
+#TODO passer le code sur des functions et apres sur une class
           

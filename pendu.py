@@ -10,29 +10,37 @@ import urllib.request
 logging.basicConfig(filename='logs.log',level=logging.DEBUG,\
       format='%(asctime)s -- %(name)s -- %(levelname)s -- %(message)s')
 
+#declaration des variables 
+reponse2=''
+
 logging.info("Verification overture de fichier mots. START")
-# On verifie si le site envoie bien les mots
-if urllib.request.urlopen("http://www.mit.edu/~ecprice/wordlist.10000").getcode() != 200:
-      logging.warning('Warning Error %s: %s', '01234', 'Le site source n envoie pas la liste des mots')
 
-      #s'il y a en erreur on affiche un fichier en local
-      f= open("./assets/mots.txt","r")
-      backup_liste = f.read()
-      reponse2 = backup_liste.split(',') #on cree un liste des mots
-      logging.info("Error le site est indisponible. Verification overture de fichier mots. FIN")
-
-else:      
+# On verifie si le site envoie bien les mots avec try  
+try:
       resp = req.get("http://www.mit.edu/~ecprice/wordlist.10000")
       logging.info("Le Site functionne correcterment. Verification overture de fichier mots. FIN")
 
       #print(resp.text) il retourne un string avec des retourn à la ligne
-      mots = resp.content #il retourne une chaine de type bytes avec "\n"
-
+      mots = resp.content #il retourne une chaine de type bytes avec "\n"      
+      
       #transformer le type byte de content en string
       reponse = mots.decode('utf-8')
 
       #on cree un liste des mots
       reponse2 = reponse.split("\n")
+
+except urllib.error.URLError as e:
+      print('Erreur trouve  ==> ',e.reason)
+      logging.error('Error %s: %s', '01234', 'Le site source est indisponible :  '+e.reason)
+
+#on verifie si la variable que recupere les mots est vide, s'il l'est alors ça veut dire qu il y a eu un proble de ressource
+#et on passe à la lecture du fichier des mots en local
+if len(reponse2) == 0 :
+      logging.info("Error le site est indisponible. Overture du fichier mots en local. START")
+      f= open("assets/mots.txt","r")
+      backup_liste = f.read()
+      reponse2 = backup_liste.split(',') #on cree un liste des mots
+      logging.info("Error le site est indisponible. Verification overture de fichier mots. FIN")
 
 #print(reponse2)
 
@@ -96,6 +104,7 @@ HANGMANPICS.reverse() # j ai enversé la liste de l'ascii pour utiliser la varia
 #on choisi un mot al hazar
 chosen_word = random.choice(reponse2) 
 
+#declaration des variables à utiliser dans la boucle
 print(chosen_word) #pour verifier
 chaineDecouvrir=[] #variable de type liste avec les lettres que on aura decouverte
 finJeux = False #variable pour sortir de la boucle
@@ -115,8 +124,6 @@ for i in range(len(chosen_word)) :
 print(chaineDecouvrir)
 logging.info("Generation d'une liste qui represente les mots choisi. FIN ==> mot à diviner :"+chosen_word +" representation : "+str(chaineDecouvrir ))
 
-#declaration des variables à utiliser dans la boucle
-
 
 
 logging.info("Debut du boucle while pour diviner le mot caché. START ")
@@ -127,13 +134,19 @@ while finJeux == False:
             print("Lettres deja choisi : ", ' '.join(listeLettresChoisi))
 
       #demande d'entrer un lettre, on la transforme en minuscule
-      guest = input("\nChoisir une lettre : ").lower()
+      guest = input("\nTapez une lettre : ").lower()  
+      while len(guest) < 1:
+            logging.warning('Warning %s: %s', '1111', 'L\'utilisateur n\'a pas tapez une lettre, demandede reessayer')
+            print('\nVous \'avez pas tapez une lettre reessaye ')
+            guest=input("\nTapez une lettre : ").lower()  
+
       print(guest) #on affiche la letre
       logging.info("L'utilisateur à tappé : "+guest)
 
       listeLettresChoisi.add(guest) #ajoute la lettre dans le set, pour afficher apres les lettres deja tapée
 
       logging.info("Verification si la lettre fait partir du mot à diviner ")
+      #TODO verifier quand le mot est un valor vide, alors faire un loop
       #on demande si la lettre est partie du mot choisie
       if guest in chosen_word:            
             print('Lettre trouvée!!!', guest.upper())
@@ -176,7 +189,7 @@ while finJeux == False:
                   
                   logging.info("L'utilisateur à tapé Oui, mot tapé : "+respuesta+" . START")
                   if respuesta == chosen_word: # verification si la reponse est egal au mot choisi
-                        print('Vous avez Gangné!!!')
+                        print('Vous avez Deviné Bravo Gangné!!!')
                         finJeux=True #pour sortir du boucle
                         logging.info("Mot correcte GAGNE, L'utilisateur à tapé Oui. FIN ")
                   else :
